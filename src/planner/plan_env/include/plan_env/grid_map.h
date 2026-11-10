@@ -164,6 +164,16 @@ public:
 
   void initMap(ros::NodeHandle& nh);
 
+  // Fully known static maps for deterministic ground-robot tests. No sensors,
+  // timers or inflation: occupancy uses the same log-odds storage as initMap.
+  void initStaticMap(const Eigen::Vector3d& origin, const Eigen::Vector3d& size, double resolution);
+  void setRawOccupancy(const Eigen::Vector3i& id, int state);
+  inline int getRawOccupancy(const Eigen::Vector3i& id) {
+    if (!isInMap(id)) return -1;
+    if (isUnknown(id)) return -1;
+    return getOccupancy(id);
+  }
+
   void publishMap();
   void publishMapInflate(bool all_info = false);
 

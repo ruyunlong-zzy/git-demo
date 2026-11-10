@@ -1,4 +1,34 @@
 #include "plan_env/grid_map.h"
+#include <stdexcept>
+
+void GridMap::initStaticMap(const Eigen::Vector3d& origin, const Eigen::Vector3d& size, double resolution)
+{
+  if (!origin.allFinite() || !size.allFinite() || !std::isfinite(resolution) ||
+      resolution <= 0 || (size.array() <= 0).any())
+    throw std::invalid_argument("Invalid static map geometry");
+  mp_.resolution_ = resolution;
+  mp_.resolution_inv_ = 1.0 / resolution;
+  mp_.map_origin_ = origin;
+  mp_.map_size_ = size;
+  mp_.map_min_boundary_ = origin;
+  mp_.map_max_boundary_ = origin + size;
+  mp_.clamp_min_log_ = logit(0.12);
+  mp_.clamp_max_log_ = logit(0.97);
+  mp_.min_occupancy_log_ = logit(0.80);
+  mp_.unknown_flag_ = 0.01;
+  for (int i = 0; i < 3; ++i) mp_.map_voxel_num_(i) = std::ceil(size(i) / resolution);
+  const size_t count = static_cast<size_t>(mp_.map_voxel_num_(0)) * mp_.map_voxel_num_(1) * mp_.map_voxel_num_(2);
+  md_.occupancy_buffer_.assign(count, mp_.clamp_min_log_);
+  md_.occupancy_buffer_inflate_.assign(count, 0);
+}
+
+void GridMap::setRawOccupancy(const Eigen::Vector3i& id, int state)
+{
+  if (!isInMap(id)) throw std::out_of_range("Voxel outside static map");
+  if (state < -1 || state > 1) throw std::invalid_argument("Occupancy must be -1, 0 or 1");
+  md_.occupancy_buffer_[toAddress(id)] = state < 0 ? mp_.clamp_min_log_ - mp_.unknown_flag_ :
+                                      (state ? mp_.clamp_max_log_ : mp_.clamp_min_log_);
+}
 
 // #define current_img_ md_.depth_image_[image_cnt_ & 1]
 // #define last_img_ md_.depth_image_[!(image_cnt_ & 1)]

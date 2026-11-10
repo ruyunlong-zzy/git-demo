@@ -1,0 +1,4 @@
+<launch>
+  <include file="$(find humanoid_navigation)/launch/demo.launch"><arg name="scene" value="low"/><arg name="rviz" value="false"/></include>
+  <test test-name="low_acceptance" pkg="humanoid_navigation" type="ros_acceptance.py" time-limit="75"/>
+</launch>

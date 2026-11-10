@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>humanoid_navigation</name><version>0.1.0</version>
+  <description>Four dimensional flat-ground humanoid navigation baseline.</description>
+  <maintainer email="maintainer@example.com">Maintainer</maintainer><license>BSD-3-Clause</license>
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>message_generation</build_depend>
+  <depend>rospy</depend><depend>std_msgs</depend><depend>geometry_msgs</depend>
+  <depend>roscpp</depend><depend>plan_env</depend><build_depend>eigen</build_depend><build_depend>libpcl-all-dev</build_depend>
+  <depend>cv_bridge</depend><depend>message_filters</depend>
+  <depend>nav_msgs</depend><depend>sensor_msgs</depend><depend>visualization_msgs</depend>
+  <exec_depend>message_runtime</exec_depend><exec_depend>rviz</exec_depend>
+  <test_depend>python3-pytest</test_depend>
+  <test_depend>rostest</test_depend>
+</package>

@@ -1,0 +1,4 @@
+<launch>
+  <include file="$(find humanoid_navigation)/launch/demo.launch"><arg name="scene" value="open"/><arg name="rviz" value="false"/></include>
+  <test test-name="replan_failure_acceptance" pkg="humanoid_navigation" type="ros_acceptance.py" time-limit="75"><param name="mode" value="replan_failure"/></test>
+</launch>

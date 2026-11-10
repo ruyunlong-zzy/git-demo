@@ -1,0 +1,19 @@
+<launch>
+  <arg name="scene" default="compound"/>
+  <arg name="rviz" default="true"/>
+  <group ns="humanoid">
+    <node pkg="humanoid_navigation" type="humanoid_static_grid_map" name="static_grid_map" output="screen">
+      <param name="scene" value="$(arg scene)"/>
+      <param name="map_resolution" value="0.05"/>
+    </node>
+    <node pkg="humanoid_navigation" type="navigation_node.py" name="navigation" output="screen">
+      <rosparam command="load" file="$(find humanoid_navigation)/config/default.yaml"/>
+      <param name="scene" value="$(arg scene)"/>
+    </node>
+    <node pkg="humanoid_navigation" type="executor_node.py" name="executor" output="screen">
+      <rosparam command="load" file="$(find humanoid_navigation)/config/default.yaml"/>
+      <param name="scene" value="$(arg scene)"/>
+    </node>
+  </group>
+  <node if="$(arg rviz)" pkg="rviz" type="rviz" name="humanoid_rviz" args="-d $(find humanoid_navigation)/config/demo.rviz"/>
+</launch>
